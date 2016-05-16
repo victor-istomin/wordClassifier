@@ -60,3 +60,6 @@ function getWordCodes(word)
 }
 
 module.exports.getWordCodes = getWordCodes;
+module.exports.minCode      = minCode;
+module.exports.maxCode      = maxCode;
+module.exports.MAX_LENGTH    = MAX_LENGTH;
