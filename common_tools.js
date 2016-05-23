@@ -65,7 +65,7 @@ var neuronsCount = (maxCode - minCode) * MAX_LENGTH;
 var netProperties =
 {
     "input": neuronsCount,
-    "hidden": 16,
+    "hidden": 15,
     "output": 1,
 };
 
