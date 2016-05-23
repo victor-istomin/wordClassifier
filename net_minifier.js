@@ -149,6 +149,7 @@ var numbers = getNetworkNumbers(netProperties, connections, neurons)
   , buffer  = getNetworkBuffer(netProperties, numbers);
 
 fs.writeFileSync('./net_synaptic_minified.bin', buffer);
+console.log("Done. props: " + JSON.stringify(netProperties));
 
 
 

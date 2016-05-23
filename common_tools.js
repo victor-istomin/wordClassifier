@@ -23,7 +23,8 @@ function normalizeWord(word)
     for (let i = 0; i < word.length; ++i)
     {
         let ch = word[i];
-        if (ch > 'z' || ch < 'a')
+
+        if (ch > spaceChar[0] || ch < specialChar[0])   // TODO: [0] is needed?
         {
             word[i] = specialChar;
         }
