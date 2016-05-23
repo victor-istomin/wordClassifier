@@ -1,3 +1,6 @@
 [submodule "cpp/tiny-cnn"]
 	path = cpp/tiny-cnn
 	url = git@github.com:nyanp/tiny-cnn.git
+[submodule "cpp/jsoncons"]
+	path = cpp/jsoncons
+	url = git@github.com:danielaparker/jsoncons.git
