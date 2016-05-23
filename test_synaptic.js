@@ -14,11 +14,9 @@ var Neuron = synaptic.Neuron,
     Trainer = synaptic.Trainer,
     Architect = synaptic.Architect;
 
-var neuronsCount = (tools.maxCode - tools.minCode) * tools.MAX_LENGTH;
+var netProperties = tools.netProperties;
 
-// net: 'neuronsCount' for each leven including input, 1 neuron output
-console.log("Creating network with " + neuronsCount + " neurons per each layer...");
-var net = new Architect.Perceptron(neuronsCount, neuronsCount, 1);
+var net = new Architect.Perceptron(netProperties.input, netProperties.hidden, netProperties.output);
 
 console.log("Creating bundle for trining...");
 var trainBundle = [];
@@ -38,16 +36,16 @@ var trainer = new Trainer(net);
 console.log("Training " + trainBundle.length + " items...");
 trainer.train(trainBundle, 
 {
-    iterations: 20000,
+    iterations: 1000,
     error: 0.01,
-    log: 100,
+    log: 20
 });
 
 // test network:
 console.log("Test results:");
 
-var samples = ["dog", "cat", "bab", "bzb", "bbb", "bac", "bad"]; //, "cat", "bus", "ear", "eat", "eee", "beat", "brain", "bear"];
-//var samples = ["tritoxide", "grasswork", "grass", "unflanged", "oryctologic", "lamb's", "lamb", "bonsai's", "bonsai", "pelagia", "belaz", "pelaz", "lampelagia", "racis", "stical", "mand", "critoxide", "cridoxide", "crepoxize", "classwork"];
+//var samples = ["dog", "cat", "bab", "bzb", "bbb", "bac", "bad"]; //, "cat", "bus", "ear", "eat", "eee", "beat", "brain", "bear"];
+var samples = ["tritoxide", "grasswork", "grass", "unflanged", "oryctologic", "lamb's", "lamb", "bonsai's", "bonsai", "pelagia", "belaz", "pelaz", "lampelagia", "racis", "stical", "mand", "critoxide", "cridoxide", "crepoxize", "classwork"];
 
 for(word of samples)
 {

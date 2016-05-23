@@ -59,7 +59,18 @@ function getWordCodes(word)
     return vector;
 }
 
-module.exports.getWordCodes = getWordCodes;
-module.exports.minCode      = minCode;
-module.exports.maxCode      = maxCode;
+var neuronsCount = (maxCode - minCode) * MAX_LENGTH;
+
+// network layer propertier
+var netProperties =
+{
+    "input": neuronsCount,
+    "hidden": 16,
+    "output": 1,
+};
+
+module.exports.getWordCodes  = getWordCodes;
+module.exports.minCode       = minCode;
+module.exports.maxCode       = maxCode;
 module.exports.MAX_LENGTH    = MAX_LENGTH;
+module.exports.netProperties = netProperties;
