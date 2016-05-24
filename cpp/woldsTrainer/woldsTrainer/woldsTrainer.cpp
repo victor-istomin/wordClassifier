@@ -12,8 +12,8 @@ using jsoncons::pretty_print;
 typedef tiny_cnn::network<tiny_cnn::mse, tiny_cnn::gradient_descent> Network;
 typedef std::unordered_map<std::string, bool>                        WordsMap;
 typedef std::vector<tiny_cnn::vec_t>                                 WordVectors;
-typedef std::vector<tiny_cnn::label_t>                               WordVectorLabels;//  TODO : what is regression?
-//typedef std::vector<tiny_cnn::vec_t>                               WordVectorLabels;
+//typedef std::vector<tiny_cnn::label_t>                               WordVectorLabels;//  TODO : what is regression?
+typedef std::vector<tiny_cnn::vec_t>                               WordVectorLabels;
 
 Network makeNetwork() 
 {
@@ -21,7 +21,7 @@ Network makeNetwork()
 
 	// props: {"input":405,"hidden":15,"output":1}
 	net << tiny_cnn::fully_connected_layer<tiny_cnn::activation::sigmoid>(405, 15)
-		<< tiny_cnn::fully_connected_layer<tiny_cnn::activation::sigmoid>(15, 2);
+		<< tiny_cnn::fully_connected_layer<tiny_cnn::activation::sigmoid>(15, 1);
 
 	assert(net.in_dim()  == 405);
 	assert(net.out_dim() == 1);
@@ -38,8 +38,8 @@ WordsMap makeWordsMap(const std::string& file, WordVectors& wordVectors, WordVec
 	json trainJson = json::parse_file(file);
 
 	size_t index = 0;
-	//const auto trueVec  = tiny_cnn::vec_t(1, 1.0);
-	//const auto falseVec = tiny_cnn::vec_t(1, 0.0);
+	const auto trueVec  = tiny_cnn::vec_t(1, 1.0);
+	const auto falseVec = tiny_cnn::vec_t(1, 0.0);
 
 	for(const auto& member : trainJson.members())
 	{
@@ -50,7 +50,7 @@ WordsMap makeWordsMap(const std::string& file, WordVectors& wordVectors, WordVec
 		words[name] = isWord;
 
 		wordVectors.push_back(CommonTools::makeWordVector(name));
-		wordLabels.push_back(isWord ? 0 : 1); // trueVec: falseVec);
+		wordLabels.push_back(isWord ? trueVec: falseVec);
 
 		if ((++index % 1000) == 0)
 			std::cout << ".";
@@ -94,8 +94,23 @@ int main()
 	try
 	{
 		int progress = 0;
-		auto progressFunc = [&progress]() { if (0 == (++progress % 20)) std::cout << "."; };
-		net.train(wordsVectors, wordsLabels, 1, 1000, tiny_cnn::nop, progressFunc, true, 4);
+        const int progressEnd = words.size();
+
+		auto progressFunc = [&progress, progressEnd]()
+        {
+            const int promille = progressEnd / 1000;
+            const int percent  = progressEnd / 100;
+            if (percent == 0 || promille == 0)
+                return; // no sense to display progress
+
+            if (0 == (++progress % (promille / 2 + 1)))
+                std::cout << "." << std::flush;
+            if (0 == (progress % (percent * 10)))
+                std::cout << progress / percent << "%" << std::endl;
+        };
+
+        std::cout << "Training " << progressEnd << " words..." << std::flush;
+		net.train(wordsVectors, wordsLabels, 1, 1000, tiny_cnn::nop, progressFunc, true, 2);
 	}
 	catch (const std::exception& e)
 	{
