@@ -1,4 +1,5 @@
 testcases/*.json
+testcases/big/*.json
 
 # Logs
 logs

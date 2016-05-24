@@ -94,23 +94,36 @@ int main()
 	try
 	{
 		int progress = 0;
-        const int progressEnd = words.size();
+        const int progressEnd = 1000;
 
-		auto progressFunc = [&progress, progressEnd]()
+		auto progressFunc = [&net, &words, &wordsVectors, &wordsLabels, &progress, progressEnd]()  // TODO - smaller testing data amount?
         {
             const int promille = progressEnd / 1000;
             const int percent  = progressEnd / 100;
             if (percent == 0 || promille == 0)
                 return; // no sense to display progress
 
-            if (0 == (++progress % (promille / 2 + 1)))
+            if (0 == (++progress % (promille / 4 + 1)))
                 std::cout << "." << std::flush;
-            if (0 == (progress % (percent * 10)))
-                std::cout << progress / percent << "%" << std::endl;
+
+            if (0 == (progress % (percent * 1)))
+            {
+                tiny_cnn::float_t loss = net.get_loss(wordsVectors, wordsLabels);
+                std::cout << progress / percent << "% epoch: " << progress << " - loss: " << loss << std::flush;
+
+                std::ofstream ofs(("words_" + std::to_string(words.size()) 
+                                 + "epoch_" + std::to_string(progress)).c_str());
+                ofs << net;
+                std::cout << "; saved." << std::endl;
+            }
         };
 
-        std::cout << "Training " << progressEnd << " words..." << std::flush;
-		net.train(wordsVectors, wordsLabels, 1, 1000, tiny_cnn::nop, progressFunc, true, 2);
+        std::cout << "Training " << words.size() << " words..." << std::flush;
+		net.train(wordsVectors, wordsLabels, 1, progressEnd, tiny_cnn::nop, progressFunc, true, 2);
+        std::cout << "Training finished at " << progress << std::endl;
+
+        std::ofstream ofs(("words_" + std::to_string(words.size()) + "finish_" + std::to_string(progress)).c_str());
+        ofs << net;
 	}
 	catch (const std::exception& e)
 	{
