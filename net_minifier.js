@@ -151,5 +151,11 @@ var numbers = getNetworkNumbers(netProperties, connections, neurons)
 fs.writeFileSync('./net_synaptic_minified.bin', buffer);
 console.log("Done. props: " + JSON.stringify(netProperties));
 
-
+// Debug:
+for(var word of ["cote d'azur", "nebuchadnezzarII", "NEBUCHASNEZZARII"])
+{
+    let codes  = tools.getWordCodes(word);
+    let normal = tools.normalizeWord(word);
+    console.log(word + "(" + codes + "); normalized: " + normal);
+}
 

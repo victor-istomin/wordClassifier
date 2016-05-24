@@ -19,18 +19,19 @@ function normalizeWord(word)
     var spaceChar   = String.fromCharCode(maxCode);
 
     word = padEnd(word.toLowerCase().substr(0, MAX_LENGTH), MAX_LENGTH, spaceChar);
+    var result = "";
 
     for (let i = 0; i < word.length; ++i)
     {
         let ch = word[i];
+        if (ch === ' ')
+            ch = spaceChar;
 
-        if (ch > spaceChar[0] || ch < specialChar[0])   // TODO: [0] is needed?
-        {
-            word[i] = specialChar;
-        }
+        var isSpecial = (ch > spaceChar || ch < specialChar);
+        result = result + (isSpecial ? specialChar : ch);
     }
 
-    return word;
+    return result;
 }
 
 // get 'word' vector
@@ -75,3 +76,6 @@ module.exports.minCode       = minCode;
 module.exports.maxCode       = maxCode;
 module.exports.MAX_LENGTH    = MAX_LENGTH;
 module.exports.netProperties = netProperties;
+
+// debug only
+module.exports.normalizeWord = normalizeWord;
